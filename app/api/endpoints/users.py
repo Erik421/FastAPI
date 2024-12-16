@@ -5,16 +5,16 @@ from app.db.db import USER_DATA
 from app.core.security import get_user_from_db, get_jwt_token_by_name
 
 
-router = APIRouter()
+router = APIRouter(prefix="/auth")
 
 
-@router.post("/auth/register")
+@router.post("/register")
 def register_new_user(user: User):
     USER_DATA.append(user)
     return {"message": f"Пользователь {user.username} успешно зарегистрирован"}
 
 
-@router.post("/auth/login")
+@router.post("/login")
 def login(user_data: OAuth2PasswordRequestForm = Depends()):
     user = get_user_from_db(user_data.username)
     if user is None or user_data.password != user.password:

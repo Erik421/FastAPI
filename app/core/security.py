@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
+import jwt
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-import jwt
 from app.core.config import settings
 from app.db.db import USER_DATA
 
@@ -18,7 +18,8 @@ def create_jwt_token(data: dict):
 
 
 def get_jwt_token_by_name(username):
-    return {"access_token": create_jwt_token({"sub": username, "exp": datetime.utcnow() + EXP_TIME})}
+    return {"access_token": create_jwt_token({"sub": username, "exp": datetime.utcnow() + EXP_TIME}), "token_type": "bearer"}
+
 
 
 def get_user_from_db(username: str):
@@ -28,6 +29,6 @@ def get_user_from_db(username: str):
     return None
 
 
-def get_user_from_token(token=Depends(oauth2_scheme)):
+def get_user_from_token(token = Depends(oauth2_scheme)) -> str:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     return payload.get("sub")

@@ -7,10 +7,10 @@ from app.api.models.currency import Convert
 class TestConvert(unittest.TestCase):
     @patch("app.api.endpoints.currency.get_convert")
     def test_convert_currency(self, mock_get_convert: MagicMock):
-        mock_response = "111"
+        mock_response = 111
         mock_get_convert.return_value = mock_response
         token = test_login()
-        response = client.get(f"/currency/exchange?from_currency=TEST&to_currency=TEST&amount={mock_response}",
+        response = client.get(f"/currency/convert?from_currency=TEST&to_currency=TEST&amount={mock_response}",
                               headers={"Authorization": F"Bearer {token}"})
         mock_get_convert.assert_called_once_with(Convert(from_currency="TEST", to_currency="TEST", amount=mock_response))
         self.assertEqual(response.status_code, 200)
